@@ -980,22 +980,6 @@ function submitSurvey() {
   .catch(() => {
     alert("Submission failed. Please check your connection.");
   });
-}
-
-    // Hide form, show thank you
-    document.querySelectorAll('.question-block, .section-strip').forEach(el => el.style.display = 'none');
-    document.getElementById('submitWrap').style.display = 'none';
-    const ty = document.getElementById('thankYou');
-    ty.style.display = 'block';
-    ty.style.animation = 'fadeUp 0.6s ease both';
-
-    // Fill progress
-    document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('progressLabel').textContent = 'Complete — Thank you!';
-
-    // Log for dev (in production, POST to your backend here)
-    console.log('Survey responses:', answers);
-  }
 </script>
 </body>
 </html>
