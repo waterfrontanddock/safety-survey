@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waterfront Safety Study — Michigan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0C2233;
+    --lake: #1B6CA8;
+    --teal: #2A9D8F;
+    --sand: #F4EDE0;
+    --sand-dark: #E8D9C2;
+    --foam: #FAFCFD;
+    --text: #1A2B38;
+    --muted: #6B8299;
+    --white: #FFFFFF;
+    --accent: #E76F51;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Water texture background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 120% 60% at 20% 80%, rgba(27,108,168,0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 80% at 80% 20%, rgba(42,157,143,0.2) 0%, transparent 50%),
+      linear-gradient(160deg, #0C2233 0%, #0E2A40 40%, #112E45 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Ripple dots */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 64px 0 48px;
+    text-align: center;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(42,157,143,0.2);
+    border: 1px solid rgba(42,157,143,0.5);
+    color: #5EC8BE;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: #7DD3C8;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .meta-pills {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.65);
+    font-size: 12px;
+    font-weight: 400;
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+
+  .pill svg { opacity: 0.7; }
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 100px;
+    height: 4px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), #7DD3C8);
+    border-radius: 100px;
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  .progress-label {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  /* ── CARD ── */
+  .survey-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  /* Section header strip */
+  .section-strip {
+    background: linear-gradient(135deg, var(--navy) 0%, #163550 100%);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .section-strip .section-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(42,157,143,0.25);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-strip h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .section-strip p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  /* Questions */
+  .question-block {
+    padding: 28px 32px;
+    border-bottom: 1px solid #EEF2F5;
+    transition: background 0.2s;
+  }
+
+  .question-block:last-of-type { border-bottom: none; }
+  .question-block:hover { background: #FAFCFD; }
+
+  .q-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: var(--lake);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  /* Radio options */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .options-grid.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .opt-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 1.5px solid #DDE4EA;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.4;
+    background: var(--white);
+    user-select: none;
+  }
+
+  .opt-label:hover {
+    border-color: var(--lake);
+    background: rgba(27,108,168,0.04);
+  }
+
+  .opt-label input[type="radio"],
+  .opt-label input[type="checkbox"] {
+    display: none;
+  }
+
+  .opt-label.selected {
+    border-color: var(--lake);
+    background: rgba(27,108,168,0.07);
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .opt-label.selected .radio-dot {
+    background: var(--lake);
+    border-color: var(--lake);
+  }
+
+  .opt-label.selected .radio-dot::after {
+    opacity: 1;
+  }
+
+  .radio-dot {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #C5D0D8;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.18s;
+  }
+
+  .radio-dot::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+
+  .check-dot {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #C5D0D8;
+    border-radius: 4px;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.18s;
+  }
+
+  .opt-label.selected .check-dot {
+    background: var(--lake);
+    border-color: var(--lake);
+  }
+
+  .opt-label.selected .check-dot::after {
+    opacity: 1;
+  }
+
+  .check-dot::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+
+  /* Scale / slider */
+  .scale-wrap {
+    padding: 8px 0;
+  }
+
+  .scale-track {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .scale-btn {
+    flex: 1;
+    padding: 12px 4px;
+    border: 1.5px solid #DDE4EA;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+  }
+
+  .scale-btn:hover { border-color: var(--lake); color: var(--lake); }
+
+  .scale-btn.active {
+    background: var(--lake);
+    border-color: var(--lake);
+    color: white;
+  }
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 0 2px;
+  }
+
+  /* Rank */
+  .rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1.5px solid #DDE4EA;
+    border-radius: 10px;
+    background: white;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+  }
+
+  .rank-item:hover { border-color: var(--lake); background: rgba(27,108,168,0.04); }
+
+  .rank-item.ranked {
+    border-color: var(--teal);
+    background: rgba(42,157,143,0.07);
+  }
+
+  .rank-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: #EEF2F5;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.18s;
+  }
+
+  .rank-item.ranked .rank-badge {
+    background: var(--teal);
+    color: white;
+  }
+
+  .rank-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+
+  /* Textarea */
+  .open-text {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #DDE4EA;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color 0.18s;
+    outline: none;
+    line-height: 1.6;
+  }
+
+  .open-text:focus { border-color: var(--lake); box-shadow: 0 0 0 3px rgba(27,108,168,0.1); }
+
+  .open-text-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Section divider inside card */
+  .section-gap {
+    height: 0;
+    border-top: none;
+  }
+
+  /* Submit button */
+  .submit-wrap {
+    padding: 28px 32px 32px;
+    background: var(--foam);
+    border-top: 1px solid #EEF2F5;
+    text-align: center;
+  }
+
+  .submit-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--lake) 0%, var(--teal) 100%);
+    color: white;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 8px 24px rgba(27,108,168,0.35);
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(27,108,168,0.45);
+  }
+
+  .btn-submit:active { transform: translateY(0); }
+
+  /* ── THANK YOU ── */
+  .thank-you {
+    display: none;
+    text-align: center;
+    padding: 80px 32px;
+  }
+
+  .ty-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--lake), var(--teal));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    box-shadow: 0 16px 40px rgba(42,157,143,0.4);
+  }
+
+  .thank-you h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+
+  .thank-you p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 32px 0;
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    animation: fadeUp 1s 0.5s ease both;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Mobile */
+  @media (max-width: 540px) {
+    .section-strip, .question-block, .submit-wrap { padding-left: 20px; padding-right: 20px; }
+    .options-grid.two-col { grid-template-columns: 1fr; }
+    .hero { padding: 48px 0 36px; }
+    .scale-btn { font-size: 13px; padding: 10px 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">Michigan Waterfront Safety Study</div>
+    <h1>Help Us Better Understand<br><em>Dock Safety for Families</em></h1>
+    <p>We're conducting anonymous research to better understand safety concerns at docks and piers. Your input takes about 3 minutes and makes a real difference.</p>
+    <div class="meta-pills">
+      <span class="pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3 minutes
+      </span>
+      <span class="pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        100% anonymous
+      </span>
+      <span class="pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Michigan families
+      </span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-label" id="progressLabel">Question 0 of 10</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Survey Card -->
+  <div class="survey-card" id="surveyCard">
+
+    <!-- Section 1 -->
+    <div class="section-strip">
+      <div class="section-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EC8BE" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div>
+        <h2>Section 1 — About You</h2>
+        <p>A few quick qualifying questions</p>
+      </div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-block" data-q="1">
+      <div class="q-number">1</div>
+      <div class="q-text">Do you own or regularly spend time at a property with a dock or pier on a lake, river, or other body of water?</div>
+      <div class="options-grid">
+        <label class="opt-label" onclick="selectOption(this, 'q1', 'Yes')">
+          <input type="radio" name="q1" value="Yes">
+          <span class="radio-dot"></span> Yes
+        </label>
+        <label class="opt-label screener" onclick="selectOption(this, 'q1', 'No')">
+          <input type="radio" name="q1" value="No">
+          <span class="radio-dot"></span> No
+        </label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-block" data-q="2">
+      <div class="q-number">2</div>
+      <div class="q-text">Which best describes your situation?</div>
+      <div class="options-grid">
+        <label class="opt-label" onclick="selectOption(this, 'q2', 'own')">
+          <input type="radio" name="q2" value="own">
+          <span class="radio-dot"></span> I own a waterfront property
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q2', 'visit')">
+          <input type="radio" name="q2" value="visit">
+          <span class="radio-dot"></span> I frequently visit one
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q2', 'both')">
+          <input type="radio" name="q2" value="both">
+          <span class="radio-dot"></span> Both
+        </label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-block" data-q="3">
+      <div class="q-number">3</div>
+      <div class="q-text">Are children under the age of 10 present on your dock at least occasionally?</div>
+      <div class="options-grid two-col">
+        <label class="opt-label" onclick="selectOption(this, 'q3', 'regularly')">
+          <input type="radio" name="q3" value="regularly">
+          <span class="radio-dot"></span> Yes, regularly
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q3', 'occasionally')">
+          <input type="radio" name="q3" value="occasionally">
+          <span class="radio-dot"></span> Yes, occasionally
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q3', 'rarely')">
+          <input type="radio" name="q3" value="rarely">
+          <span class="radio-dot"></span> Rarely
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q3', 'no')">
+          <input type="radio" name="q3" value="no">
+          <span class="radio-dot"></span> No
+        </label>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section-strip" style="margin-top:4px;">
+      <div class="section-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EC8BE" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <h2>Section 2 — Safety Perceptions</h2>
+        <p>Your experiences and feelings around dock safety</p>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-block" data-q="4">
+      <div class="q-number">4</div>
+      <div class="q-text">How concerned are you about child safety on or near your dock?</div>
+      <div class="scale-wrap">
+        <div class="scale-track" id="scale-q4"></div>
+        <div class="scale-labels">
+          <span>Not at all concerned</span>
+          <span>Extremely concerned</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-block" data-q="5">
+      <div class="q-number">5</div>
+      <div class="q-text">Have you or someone you know personally experienced a close call or accident involving a child and a dock or open water?</div>
+      <div class="options-grid">
+        <label class="opt-label" onclick="selectOption(this, 'q5', 'personally')">
+          <input type="radio" name="q5" value="personally">
+          <span class="radio-dot"></span> Yes — personally
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q5', 'someone')">
+          <input type="radio" name="q5" value="someone">
+          <span class="radio-dot"></span> Yes — someone I know
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q5', 'no')">
+          <input type="radio" name="q5" value="no">
+          <span class="radio-dot"></span> No
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q5', 'prefer_not')">
+          <input type="radio" name="q5" value="prefer_not">
+          <span class="radio-dot"></span> Prefer not to say
+        </label>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-block" data-q="6">
+      <div class="q-number">6</div>
+      <div class="q-text">When children are present on your dock, how much does their proximity to the open water end affect your ability to relax?</div>
+      <div class="options-grid">
+        <label class="opt-label" onclick="selectOption(this, 'q6', 'not_at_all')">
+          <input type="radio" name="q6" value="not_at_all">
+          <span class="radio-dot"></span> Not at all — I'm comfortable
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q6', 'somewhat')">
+          <input type="radio" name="q6" value="somewhat">
+          <span class="radio-dot"></span> Somewhat — it's in the back of my mind
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q6', 'a_lot')">
+          <input type="radio" name="q6" value="a_lot">
+          <span class="radio-dot"></span> A lot — I stay alert the whole time
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q6', 'cant_relax')">
+          <input type="radio" name="q6" value="cant_relax">
+          <span class="radio-dot"></span> I can't relax at all when kids are near the end
+        </label>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section-strip" style="margin-top:4px;">
+      <div class="section-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5EC8BE" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div>
+        <h2>Section 3 — Product Appetite</h2>
+        <p>What you'd value in a safety solution and what you'd pay</p>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-block" data-q="7">
+      <div class="q-number">7</div>
+      <div class="q-text">If a safety product existed that addressed your biggest concern about children on docks, how likely would you be to purchase it?</div>
+      <div class="scale-wrap">
+        <div class="scale-track" id="scale-q7"></div>
+        <div class="scale-labels">
+          <span>Not at all likely</span>
+          <span>Extremely likely</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-block" data-q="8">
+      <div class="q-number">8</div>
+      <div class="q-text">Which factors would matter most when evaluating a dock safety product?</div>
+      <div class="rank-hint">Select your top 3 in order of importance.</div>
+      <div class="rank-list" id="rank-q8">
+        <div class="rank-item" onclick="toggleRank(this, 'q8')">
+          <div class="rank-badge">—</div>
+          Ease of installation &amp; removal
+        </div>
+        <div class="rank-item" onclick="toggleRank(this, 'q8')">
+          <div class="rank-badge">—</div>
+          Durability in sun, rain, and water exposure
+        </div>
+        <div class="rank-item" onclick="toggleRank(this, 'q8')">
+          <div class="rank-badge">—</div>
+          Visual appearance — fits my property's aesthetic
+        </div>
+        <div class="rank-item" onclick="toggleRank(this, 'q8')">
+          <div class="rank-badge">—</div>
+          Price
+        </div>
+        <div class="rank-item" onclick="toggleRank(this, 'q8')">
+          <div class="rank-badge">—</div>
+          Brand reputation or safety certifications
+        </div>
+        <div class="rank-item" onclick="toggleRank(this, 'q8')">
+          <div class="rank-badge">—</div>
+          Ability to use seasonally
+        </div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-block" data-q="9">
+      <div class="q-number">9</div>
+      <div class="q-text">What is the most you would pay for a well-designed, high-quality dock safety product that gave you genuine peace of mind?</div>
+      <div class="options-grid two-col">
+        <label class="opt-label" onclick="selectOption(this, 'q9', 'under75')">
+          <input type="radio" name="q9" value="under75">
+          <span class="radio-dot"></span> Under $75
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q9', '75_150')">
+          <input type="radio" name="q9" value="75_150">
+          <span class="radio-dot"></span> $75 – $150
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q9', '150_250')">
+          <input type="radio" name="q9" value="150_250">
+          <span class="radio-dot"></span> $150 – $250
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q9', '250_400')">
+          <input type="radio" name="q9" value="250_400">
+          <span class="radio-dot"></span> $250 – $400
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q9', '400plus')">
+          <input type="radio" name="q9" value="400plus">
+          <span class="radio-dot"></span> $400+
+        </label>
+        <label class="opt-label" onclick="selectOption(this, 'q9', 'depends')">
+          <input type="radio" name="q9" value="depends">
+          <span class="radio-dot"></span> Depends on features
+        </label>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-block" data-q="10">
+      <div class="q-number">10</div>
+      <div class="q-text">In one sentence, what is your single biggest safety concern when children are on your dock?</div>
+      <textarea class="open-text" id="q10-text" placeholder="Type your answer here..." oninput="updateProgress()"></textarea>
+      <div class="open-text-note">Your own words are the most valuable part of this study.</div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap" id="submitWrap">
+      <p class="submit-note">Your responses are completely anonymous. No personal information is collected or stored.</p>
+      <button class="btn-submit" onclick="submitSurvey()">
+        Submit My Responses
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <!-- Thank You -->
+    <div class="thank-you" id="thankYou">
+      <div class="ty-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Thank you so much.</h2>
+      <p>Your response has been recorded. You're helping make Michigan's waterfront communities safer for families — and that matters.</p>
+    </div>
+
+  </div>
+
+  <div class="page-footer">Michigan Waterfront Safety Study &nbsp;·&nbsp; Anonymous &nbsp;·&nbsp; 2026</div>
+</div>
+
+<script>
+  const answers = {};
+  const rankData = { 'q8': [] };
+
+  // Build 1–5 scale for Q4
+  buildScale('scale-q4', 5, 'q4');
+  // Build 1–10 scale for Q7
+  buildScale('scale-q7', 10, 'q7');
+
+  function buildScale(containerId, max, qKey) {
+    const container = document.getElementById(containerId);
+    for (let i = 1; i <= max; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'scale-btn';
+      btn.textContent = i;
+      btn.dataset.val = i;
+      btn.dataset.q = qKey;
+      btn.onclick = function() {
+        document.querySelectorAll(`#${containerId} .scale-btn`).forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        answers[qKey] = i;
+        updateProgress();
+      };
+      container.appendChild(btn);
+    }
+  }
+
+  function selectOption(label, qKey, value) {
+    const parent = label.closest('.options-grid');
+    parent.querySelectorAll('.opt-label').forEach(l => l.classList.remove('selected'));
+    label.classList.add('selected');
+    answers[qKey] = value;
+
+    // Screener: if Q1 = No, show message
+    if (qKey === 'q1' && value === 'No') {
+      alert("Thank you for your interest! This study is focused on people who spend time at properties with docks or piers. We appreciate you taking the time.");
+    }
+    updateProgress();
+  }
+
+  function toggleRank(item, qKey) {
+    const arr = rankData[qKey];
+    const idx = arr.indexOf(item);
+    if (idx > -1) {
+      // deselect — remove and renumber
+      arr.splice(idx, 1);
+      item.classList.remove('ranked');
+      item.querySelector('.rank-badge').textContent = '—';
+      arr.forEach((el, i) => {
+        el.querySelector('.rank-badge').textContent = i + 1;
+      });
+    } else {
+      if (arr.length >= 3) {
+        // remove oldest
+        const removed = arr.shift();
+        removed.classList.remove('ranked');
+        removed.querySelector('.rank-badge').textContent = '—';
+        arr.forEach((el, i) => el.querySelector('.rank-badge').textContent = i + 1);
+      }
+      arr.push(item);
+      item.classList.add('ranked');
+      item.querySelector('.rank-badge').textContent = arr.length;
+    }
+    answers[qKey] = arr.map(el => el.textContent.trim());
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const q10 = document.getElementById('q10-text').value.trim();
+    if (q10) answers['q10'] = q10;
+
+    const answered = Object.keys(answers).length;
+    const total = 10;
+    const pct = Math.min((answered / total) * 100, 100);
+
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = `Question ${Math.min(answered, total)} of ${total}`;
+  }
+
+  function submitSurvey() {
+    // Validate at least Q1–Q7 answered
+    const required = ['q1','q2','q3','q4','q5','q6','q7'];
+    const missing = required.filter(q => !answers[q]);
+    if (missing.length > 0) {
+      alert('Please answer all questions before submitting. It looks like a few are still unanswered.');
+      return;
+    }
+
+    // Hide form, show thank you
+    document.querySelectorAll('.question-block, .section-strip').forEach(el => el.style.display = 'none');
+    document.getElementById('submitWrap').style.display = 'none';
+    const ty = document.getElementById('thankYou');
+    ty.style.display = 'block';
+    ty.style.animation = 'fadeUp 0.6s ease both';
+
+    // Fill progress
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = 'Complete — Thank you!';
+
+    // Log for dev (in production, POST to your backend here)
+    console.log('Survey responses:', answers);
+  }
+</script>
+</body>
+</html>
